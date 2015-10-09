@@ -1,0 +1,44 @@
+<h1><%= @article.title%></h1>
+<% unless @article.user.nil? %>
+	
+	<p>
+	Escrito por : <%= @article.user.email %>
+    </p>
+<%end%>
+<div class="field">
+	<% @article.categories.each do |category| %>
+		<%= link_to category.name, category, style:"color:#{category.color};" %>
+	<%end%>
+</div>	
+<div class="field">
+	<%= image_tag @article.cover.url() %>
+</div>
+	<p>
+	Visitas : <%= @article.visits_count %>
+    </p>
+<div>
+	<%= @article.body %>
+</div>
+
+<div class="field">
+	<h3>Comentarios</h3>
+	<%= render "comments/form" %>
+	<ul id="comments-box">
+	<%@article.comments.each do |comment|  %>
+		<li>
+			<%= comment.body %> - <%= comment.user.email %>
+		</li>
+	<%end%>
+	</ul>
+</div>
+
+<% if user_signed_in? %>
+  <% if current_user.id == @article.user_id %>
+	<div>
+	  <%= link_to "Editar", edit_article_path(@article)%>
+    </div>
+  <%else%>
+	<%= link_to "Sin permiso para editar", new_user_session_path %>
+	<p>Solo puede editar usuario: <%= @article.user.email %></p>
+ <%end%>
+<%end%>
